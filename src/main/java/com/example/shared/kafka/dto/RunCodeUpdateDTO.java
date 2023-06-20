@@ -1,8 +1,11 @@
 package com.example.shared.kafka.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -15,27 +18,66 @@ public class RunCodeUpdateDTO {
         updateTime = new Date();
     }
 
-    private UpdateType updateType;
+    private Preprocessing preprocessing;
+    
+    private ArrayList<TestCase> testCases;
+    private Judgement judgement;
 
-    // for PreProcessingError and RunTimeError
-    private String heading;
-    private String message;
-
-    // for test case
-    private Long testCaseId;
-    private TestCaseStatus testCaseStatus;
-    private String testCaseOutput;
-
-    public static enum TestCaseStatus{
-        Accepted,
-        NotAccepted,
+    public void addTestCase(TestCase testCase){
+        if(this.testCases == null)this.testCases = new ArrayList<>();
+        this.testCases.add(testCase);
     }
-    public static enum UpdateType{
-        Preprocessing,
-        PreProcessingError,
-        Running,
-        RunTimeError,
-        TestCase,
-        Done,
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TestCase{
+        private Long id;
+        private TestCaseStatus status;
+        private String output;
+        private Runtime runtime;
+
+        public static enum TestCaseStatus{
+            Accepted,
+            NotAccepted,
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Runtime{
+        private RuntimeStatus status;
+        private String header;
+        private String content;
+        
+        public static enum RuntimeStatus{
+            Accepted,
+            Error,
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Preprocessing{
+        private PreprocessingStatus status;
+        private String header;
+        private String content;
+        
+        public static enum PreprocessingStatus{
+            Skipped,
+            Accepted,
+            Error,
+        }
+    }
+
+    public static enum Judgement{
+        Accepted,
+        CompilationError,
+        NotAccepted,
     }
 }
