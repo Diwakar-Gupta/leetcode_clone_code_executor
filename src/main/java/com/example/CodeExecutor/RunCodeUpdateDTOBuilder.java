@@ -4,6 +4,7 @@ import com.example.shared.kafka.dto.RunCodeUpdateDTO;
 import com.example.shared.kafka.dto.RunCodeUpdateDTO.Judgement;
 import com.example.shared.kafka.dto.RunCodeUpdateDTO.Preprocessing;
 import com.example.shared.kafka.dto.RunCodeUpdateDTO.TestCase;
+import com.example.shared.kafka.dto.RunCodeUpdateDTO.TestCase.TestCaseStatus;
 
 interface Task {
     void execute(RunCodeUpdateDTO runCodeUpdateDTO);
@@ -29,6 +30,11 @@ public class RunCodeUpdateDTOBuilder {
 
     public void addTestCase(TestCase testCase) {
         response.addTestCase(testCase);
+        this.onUpdate.execute(response);
+    }
+
+    public void addTestCase(TestCaseStatus status, String output) {
+        response.addTestCase(status, output);
         this.onUpdate.execute(response);
     }
 

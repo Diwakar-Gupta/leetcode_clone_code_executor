@@ -1,9 +1,7 @@
 package com.example.CodeExecutor.problemio;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.StringReader;
-import java.util.Scanner;
 
 import com.example.shared.kafka.dto.RunSolutionDTO;
 
@@ -12,6 +10,7 @@ public class FromRunSolutionDTOProblemIO implements ProblemIO {
     private RunSolutionDTO runSolutionDTO;
 
     public FromRunSolutionDTOProblemIO(RunSolutionDTO runSolutionDTO) {
+        this.runSolutionDTO = runSolutionDTO;
     }
 
     @Override

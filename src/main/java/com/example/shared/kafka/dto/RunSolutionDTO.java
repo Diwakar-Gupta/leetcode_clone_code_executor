@@ -1,6 +1,8 @@
 package com.example.shared.kafka.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ public class RunSolutionDTO {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class TestCase {
         private Long id;
         private String input;

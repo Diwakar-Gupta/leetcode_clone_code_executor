@@ -16,9 +16,6 @@ public class Runner {
 
         public void run() {
                 Executor executor = ExecutorFactory.getInstance(runSolutionDTO);
-                executor.start();
-                executor.prepare();
                 executor.run(runCodeUpdateDTOBuilder);
-                executor.dispose();
         }
 }

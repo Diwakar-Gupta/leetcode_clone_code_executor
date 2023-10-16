@@ -1,18 +1,16 @@
 package com.example.CodeExecutor.executor;
 
-import com.example.CodeExecutor.RunCodeUpdateDTOBuilder;
-import com.example.shared.kafka.dto.RunCodeUpdateDTO;
-import com.example.shared.kafka.dto.RunCodeUpdateDTO.Runtime.RuntimeStatus;
-import com.example.shared.kafka.dto.RunSolutionDTO;
+import com.example.CodeExecutor.problemio.ProblemIO;
+import java.io.ByteArrayInputStream;
 
 import java.util.Random;
 
 public class MockExecutor implements Executor {
 
-    private RunSolutionDTO runSolutionDTO;
+    private ProblemIO problemIO;
 
-    public MockExecutor(RunSolutionDTO runSolutionDTO) {
-        this.runSolutionDTO = runSolutionDTO;
+    public MockExecutor(ProblemIO problemIO) {
+        this.problemIO = problemIO;
     }
 
     @Override
@@ -20,62 +18,36 @@ public class MockExecutor implements Executor {
     }
 
     @Override
-    public void prepare() {
-    }
-
-    @Override
-    public void run(RunCodeUpdateDTOBuilder runCodeUpdateDTOBuilder) {
+    public ExecutorRunResult preProcess() {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return new ExecutorRunResult(ExecutorRunResult.Status.CompilationSuccess, null, null);
+    }
 
-        runCodeUpdateDTOBuilder.setPreprocessing(new RunCodeUpdateDTO.Preprocessing(
-                RunCodeUpdateDTO.Preprocessing.PreprocessingStatus.Accepted,
-                null,
-                null));
-
-        if (runSolutionDTO.getTestCases() != null) {
-            for (RunSolutionDTO.TestCase testcase : runSolutionDTO.getTestCases()) {
-
-                RunCodeUpdateDTO.TestCase.TestCaseStatus testCaseStatus = RunCodeUpdateDTO.TestCase.TestCaseStatus
-                        .values()[new Random().nextInt(RunCodeUpdateDTO.TestCase.TestCaseStatus
-                                .values().length)];
-                RunCodeUpdateDTO.Runtime.RuntimeStatus runtimeStatus = RunCodeUpdateDTO.Runtime.RuntimeStatus
-                        .values()[new Random().nextInt(RunCodeUpdateDTO.Runtime.RuntimeStatus
-                                .values().length)];
-
-                runCodeUpdateDTOBuilder.addTestCase(
-                        new RunCodeUpdateDTO.TestCase(
-                                testcase.getId(),
-                                testCaseStatus,
-                                null,
-                                new RunCodeUpdateDTO.Runtime(
-                                        runtimeStatus,
-                                        runtimeStatus == RuntimeStatus.Error
-                                                ? "array index out of bound"
-                                                : null,
-                                        runtimeStatus == RuntimeStatus.Error
-                                                ? "array index out of bound at line 89"
-                                                : null)));
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+    @Override
+    public ExecutorRunResult prepareAndRun(int testCaseNumber) {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        runCodeUpdateDTOBuilder.setJudgement(
-                RunCodeUpdateDTO.Judgement.values()[new Random()
-                        .nextInt(RunCodeUpdateDTO.Judgement.values().length)]);
+        int type = new Random().nextInt(3);
+
+        if (type == 0) {
+            return ExecutorRunResult.accepted(new ByteArrayInputStream("mock output".getBytes()));
+        } else if (type == 1) {
+            return ExecutorRunResult.notAccepted(new ByteArrayInputStream("mock output".getBytes()));
+        } else {
+            return ExecutorRunResult.runtimeError(new ByteArrayInputStream("mock error output".getBytes()));
+        }
+    }
+
+    @Override
+    public int getNumberOfTestCases() {
+        return this.problemIO.getNumberOfTestCases();
     }
 
     @Override
@@ -85,4 +57,5 @@ public class MockExecutor implements Executor {
     @Override
     public void dispose() {
     }
+
 }

@@ -8,15 +8,19 @@ public class ExecutorFactory {
     public static Executor getInstance(RunSolutionDTO runSolutionDTO) {
         if (runSolutionDTO.getLanguageSlug().equalsIgnoreCase("py38")) {
             return getPythonInstance(runSolutionDTO);
+        } else {
+            return getMockInstance(runSolutionDTO);
         }
-        return new MockExecutor(runSolutionDTO);
+    }
+
+    private static Executor getMockInstance(RunSolutionDTO runSolutionDTO) {
+        return new MockExecutor(ProblemIOFactory.getInstance(runSolutionDTO));
     }
 
     private static Executor getPythonInstance(RunSolutionDTO runSolutionDTO) {
-        new PythonUnSafeExecutor(
+        return new PythonUnSafeExecutor(
                 runSolutionDTO,
                 ProblemIOFactory.getInstance(runSolutionDTO),
                 CheckerFactory.getInstance(runSolutionDTO));
-        return null;
     }
 }
