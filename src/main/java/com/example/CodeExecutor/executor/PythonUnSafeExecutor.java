@@ -27,11 +27,11 @@ public class PythonUnSafeExecutor implements Executor {
 
     @Override
     public ExecutorRunResult preProcess() {
-        // try {
-        // Thread.sleep(10000);
-        // } catch (InterruptedException e) {
-        // e.printStackTrace();
-        // }
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return ExecutorRunResult.compilationSuccess();
     }
 

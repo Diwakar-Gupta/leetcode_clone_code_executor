@@ -23,7 +23,7 @@ public class RunCodeUpdateDTO {
     private Preprocessing preprocessing;
 
     private ArrayList<TestCase> testCases;
-    private Judgement judgement;
+    private Judgement judgement = Judgement.Pending;
 
     public void addTestCase(TestCase testCase) {
         if (this.testCases == null)
@@ -86,5 +86,6 @@ public class RunCodeUpdateDTO {
         Accepted,
         CompilationError,
         NotAccepted,
+        Pending,
     }
 }
